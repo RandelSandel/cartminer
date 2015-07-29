@@ -32,4 +32,17 @@ class User extends Model implements AuthenticatableContract, CanResetPasswordCon
      * @var array
      */
     protected $hidden = ['password', 'remember_token'];
+
+    
+    //creates a profile method stating that it can only have one profile to a user
+    public function profile(){
+        return $this->hasOne('App\Profile');
+    }
+    
+    public function scopewhereName($name){
+        $this->where('name', '==', $name);
+    }
+    public function followers_id(){
+        return $this->unique()->hasMany('App\Profile_follower');
+    }
 }

@@ -1,0 +1,55 @@
+
+
+.productList {
+
+	padding: 1em 1em 1em;
+    background-color: #ffffff;
+    transition: background-color 0.5s ease;
+    border:1px solid #ccc;
+    height: auto;
+    border-bottom-width: 0px;
+}
+
+.productList:nth-last-child(-n+1) {
+    border-bottom-width: 1.33px;
+}
+
+.actives:hover {
+	background-color: #5eb8ad;
+
+	#productListName {
+
+		color: #ffffff;
+	}
+}
+
+.tooltip {
+	font-size: 1.2em;
+}
+.tooltip-inner {
+	background-color: #5eb8ad;
+}
+.tooltip-arrow {
+	color: #5eb8ad;
+}
+
+.navbar-default {
+	background-color: #008e92;
+	border-color: #5eb8ad;
+}
+
+.navbar-default .navbar-brand {
+	color: #ffffff;
+}
+
+.navbar-default .navbar-nav>li>a {
+	
+	color: #ffffff;
+}
+
+
+
+
+
+
+

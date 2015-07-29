@@ -1,0 +1,29 @@
+Tasks:
+ ✔ add product name and product description to right module @done (15-07-16 14:21)
+ ✔ make top box area and set as partial @done (15-07-16 18:31)
+ ✔ adjust left modal box to be fully enclosed @done (15-07-16 18:33)
+ ✔ create modal box in right modal box for linksproduc @done (15-07-16 19:13)
+ ✔ add additional link information like price next to link info @done (15-07-17 14:18)
+ ✔ when updating the product name and description update the vue instance with a response sucess message @done (15-07-28 16:52)
+ ☐ align the share, save, and mined button in a larger column
+ ✔ only show the edit icon when a product is selected @done (15-07-29 13:16)
+ ☐ hide the product name and description text when creating a new product
+ ✔ after the edit form is saved it should disappear @done (15-07-28 16:52)
+ ☐ view only the first link or the active/primary link
+
+features:
+  ☐ create a product link form and button
+  ☐ delete a product link button
+  ☐ edit a product link form and button
+
+
+  bugs:
+    ✔ when creating a new product and and selecting another product without canceling or submitting the creating new product form  
+        the creating form fills with the slected contents. We need to cancel the form if nothing has been written or save it if something has
+        been written 
+                - turn the createProduct state to "false" when selecting a product
+                @done (15-07-27 14:39)
+       ☐ if in edit mode and we change to a different product before cancelling or saveing we need to stop showing the edit form
+
+    
+
