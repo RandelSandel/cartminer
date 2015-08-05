@@ -57,7 +57,7 @@ $factory->define(App\Product_link::class, function ($faker) {
     $num = count($products->product_id());
         
     return [
-        'merchant_id' => $faker->numberBetween($min = 1, $max = $num2), 
+        'merchant_name' => $faker->company,
         'product_id' => $faker->numberBetween($min = 1, $max = $num), 
         'product_link' => $faker->url,
         'price' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 2, $max = 2),

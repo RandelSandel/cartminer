@@ -17,8 +17,9 @@
 	@include('partials.nav')
 	
 	<div class="container-fluid" style="
-    padding-left: 5%;
-    padding-right: 5%;
+    margin-left: 0%;
+    margin-right: 0%;
+    padding: 0%;
 	">
 		@yield('content')
 	</div>

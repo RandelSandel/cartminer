@@ -5,13 +5,19 @@
 	padding: 1em 1em 1em;
     background-color: #ffffff;
     transition: background-color 0.5s ease;
-    border:1px solid #ccc;
+    border: 0px solid #ccc;
     height: auto;
     border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
 }
 
 .productList:nth-last-child(-n+1) {
-    border-bottom-width: 1.33px;
+    border-bottom-width: 0px;
+}
+
+#productListName {
+	color: #777777;
 }
 
 .actives:hover {
@@ -23,6 +29,9 @@
 	}
 }
 
+
+
+
 .tooltip {
 	font-size: 1.2em;
 }
@@ -33,9 +42,23 @@
 	color: #5eb8ad;
 }
 
-.navbar-default {
-	background-color: #008e92;
+
+
+.navbar-nav > li > a, .navbar-brand {
+    padding-top:5px !important; 
+    padding-bottom:0 !important;
+    height: 30px;
+}
+.navbar {
+	min-height:30px !important;
+}
+
+
+
+.navbar-default {	
+	background-color: #5eb8ad;
 	border-color: #5eb8ad;
+	border-radius: 0px;
 }
 
 .navbar-default .navbar-brand {
@@ -50,6 +73,22 @@
 
 
 
+.linkList {
+
+	border-right-width: 1px; 
+	border-left-width: 0px;
+	border-top-width: 1px;
+	border-bottom-width: 0px;
+	border-style: solid; 
+	border-color: #ccc; 
+	padding: 15px; 
+	margin: 0px 0px 0px 0px;
+	
+}
+
+.linkList:nth-last-child(-n+1) {
+    border-bottom-width: 1.33px;
+}
 
 
 

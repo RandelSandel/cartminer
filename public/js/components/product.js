@@ -25,7 +25,8 @@ new Vue ({
 			cart_id: '',
 			product_name: '',
 			product_description: '',
-			active: '0'
+			active: '0',
+			primary_product_link_id: ''
 
 		},
 
@@ -41,8 +42,31 @@ new Vue ({
 		// true means we do NOT see the form and false means we do see the form
 		createProduct: true,
 
+		// false means we do not show the primary product
+		showPrimaryLink: false,
+
+		showAllLinks: false,
+
+		sortProductsBy: 'filtPrimaryLink',
+
+		sortProductsKey: '',
+
+		reverseProduct: false,
+
+		search: '',
+
+		searchLinks: '',
+
+		filterByKey: '',
+
+		sortLinksKey: '',
+
+		reverseLink: false,
+
 		// the primary key for the newly created product
-		lastProductId: ''
+		lastProductId: '',
+
+		primaryProductLink: []
 
 	},
 
@@ -60,12 +84,15 @@ new Vue ({
 		// CREATING A NEW PRODUCT / SELECTING A PRODUCT
     	'newProducts.id': function (val, oldVal) {
 
-    		//console.log('new: %s, old: %s', val, oldVal);
+    		console.log('new: %s, old: %s', val, oldVal);
       		
       		
       		// true means we do not see the form, however if we click delete we should still see the form
       		this.createProduct = true; 
       		this.editProduct = true;
+
+      		// true means we do in fact show the container
+      		// this.showAllLinks: true;
 
       		// if the right module was not used yet set its content to null. This way when 
       		// the page first loads nothing will be displayed
@@ -88,18 +115,18 @@ new Vue ({
 
       				var productName = this.products[x].product_name;
       				var productDescription = this.products[x].product_description;
+      				var primaryProductLinkId = this.products[x].primary_product_link_id;
 
       				// pn and pd are used to set the data to the DOM
       				this.newProducts.product_name = productName;
       				this.newProducts.product_description = productDescription;
+      				this.newProducts.primary_product_link_id = primaryProductLinkId;
       				//console.log(this.newProducts.product_name);
       			}
       			else{}
 
       		}
 
-      		
-      		
       		// for each c in combo if val is == to product_id then push val to li
       		var len = this.combo.length;
 
@@ -108,18 +135,40 @@ new Vue ({
       		for( var i = 0; i < len; i++) {	
 
       			var prod_id = this.combo[i].product_id;
-
       			//console.log(prod_id);
       			
       			// we identify the corresponding product link(s) with the product id
       			if (prod_id == val) {
 
+      				// we push the matching product links to the link array
       				this.links.push(this.combo[i]);
 
       			}
       			else {}
 
       		}
+
+      		// sets the primary link
+      		// if the primary product links id is NOT equal to 0 then we set the first link 
+      		// in the array as the primary link  
+      		// if (this.newProducts.primary_product_link_id != 0)	{
+      		// 	this.searchLinks = this.newProducts.primary_product_link_id;
+      		// }
+
+      		// else {
+
+      		// 	// else we use the first link in the array as the primary or there is no
+      		// 	// links so we dont do anything
+      		// 	console.log(this.links[0].id);
+      		// 		if (this.links[0].id = null){
+      		// 			console.log('there are no links...its null');
+      		// 			this.searchLinks = null;
+      		// 		}
+      		// 		else{
+      		// 			this.searchLinks = this.links[0].id;
+      		// 		}
+      				
+      		// }
       	}
     },
 
@@ -242,6 +291,9 @@ new Vue ({
 			// set product cart_id
 			this.newProducts.cart_id = this.cart_id;
 
+			// we use 0 as the default for all product with no set primary product id
+			this.primary_product_link_id = 0;
+
 			// add new product to object
 			var products = this.newProducts;
 			// var t;
@@ -259,7 +311,7 @@ new Vue ({
 				this.products.push(this.newProducts);
 
 				// we set the newProducts data back to nothing
-				this.newProducts = { id: '', cart_id: '', product_name: '', product_description: '', active: '0'};
+				this.newProducts = { id: '', cart_id: '', product_name: '', product_description: '', active: '0', primary_product_link_id: ''};
 
 			}.bind(this));
 		},
@@ -283,6 +335,27 @@ new Vue ({
       			}
       			else{}
       		}
+      	},
+
+      	sortProductsBy: function (sortProductsKey){
+      		this.reverseProduct = (this.sortProductsKey == sortProductsKey) ? ! this.reverseProduct : false;
+      		this.sortProductsKey = sortProductsKey;
+      	},
+
+      	sortLinksBy: function (sortLinksKey){
+      		this.reverseLink = (this.sortLinksKey == sortLinksKey) ? ! this.reverseLink : false;
+      		this.sortLinksKey = sortLinksKey;
+      	},
+
+      	filterLinksBy: function (type) {
+
+      		if (type == 'all') {
+
+      			this.searchLinks = '';	
+      		
+      		}
+      		
+
       	}
 	}
 });

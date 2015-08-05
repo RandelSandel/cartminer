@@ -12,10 +12,11 @@ class CreateProductLinksTable extends Migration
     {
         Schema::create('product_links', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('merchant_id');
+            $table->string('merchant_name');
             $table->integer('product_id')->unsigned();
             $table->string('product_link', 255);
             $table->decimal('price', 8, 2);
+            $table->integer('quantity');
             $table->decimal('shipping_cost', 8, 2);
             $table->boolean('shipping_free');
             $table->timestamps();

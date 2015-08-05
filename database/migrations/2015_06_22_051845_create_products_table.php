@@ -17,12 +17,13 @@ class CreateProductsTable extends Migration
             $table->string('product_name', 100);
             $table->text('product_description');
             $table->boolean('active');
+            $table->integer('primary_product_link_id');
             $table->timestamps();
              // this references the id field on the carts table
             $table->foreign('cart_id')
                     ->references('id')
                     ->on('carts')
-                    ->onDelete('cascade');
+                    ->onDelete('cascade') ;
         });
     }
     /**

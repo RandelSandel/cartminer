@@ -77,6 +77,17 @@ left alone these directories, with different files than 5.0
 	Middleware
 	Providers
 
+
+update 8/4
+added laravel-debugbar to see debugbar() in browser
+	see github repository for install instructions
+
+added vue by copy pasting the source code from github
+added vue-resource
+
+added special links for glyphicon icons and font issue
+added font awesome cdn
+
 	
 	
 

@@ -9,6 +9,7 @@ class Product extends Model
     	'product_name',
     	'product_description',
     	'active',
+        'primary_product_link_id'
     ];
 
  //    public function cart()
