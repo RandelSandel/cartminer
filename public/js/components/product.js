@@ -57,6 +57,14 @@ new Vue ({
 
 		searchLinks: '',
 
+		searchMerchantsInfo: {
+			searchAmazon: '',
+			otherParam: 'hello world'
+		},
+
+		searchResponse: [],
+		
+
 		filterByKey: '',
 
 		sortLinksKey: '',
@@ -354,7 +362,26 @@ new Vue ({
       			this.searchLinks = '';	
       		
       		}
-      		
+      	},
+
+      	fetchSearchAmazon: function(e) {
+
+      		e.preventDefault();
+
+      		var searchInfo = this.searchMerchantsInfo;
+      		//var products = this.newProducts;
+      		//console.log(searchInfo);
+
+      		this.$http.post('/api/searchamazon', searchInfo, function(response) {
+
+      			console.log(response[0].ASIN);
+      			console.log(response[0].DetailPageURL);
+      			console.log(response[0].Offers.Offer.OfferListing.Price.FormattedPrice);
+      			console.log(response[0].ItemAttributes.Title);
+
+      			this.searchResponse = response;
+
+      		}.bind(this));
 
       	}
 	}

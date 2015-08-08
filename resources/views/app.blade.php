@@ -13,9 +13,17 @@
 
 
 </head>
-<body>
-	@include('partials.nav')
-	
+<!-- overflow: hidden;  ... will stop the whole page from scrolling -->
+<body style="">
+
+	@if (Route::current()->uri() != 'product/{id}')
+		@include('partials.nav')
+	@else
+		<!-- we do not show the menu bar becasue this is the product page -->
+		@include('partials.nav')
+	@endif
+
+
 	<div class="container-fluid" style="
     margin-left: 0%;
     margin-right: 0%;

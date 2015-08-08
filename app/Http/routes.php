@@ -1,5 +1,9 @@
 <?php
 
+use ApaiIO\Configuration\GenericConfiguration;
+use ApaiIO\Operations\Search;
+use ApaiIO\ApaiIO;
+
 // Routes
 
 get('test', function() {
@@ -75,7 +79,8 @@ post('api/editProduct/{id}', function($id) {
 	
 	Debugbar::info($product);
 
-	// Debugbar::info(Request::get('product_description'));
+	// we use Request to get the products info sent through from the view
+	Debugbar::info(Request::get('product_description'));
 	$inputProductDescription = Request::get('product_description');
 	$inputProductName = Request::get('product_name');
 
@@ -105,6 +110,59 @@ post('api/createProduct', function() {
 Route::get('api/deleteproduct/{id}', 'PagesController@deleteProduct');
 
 
+post('api/searchamazon', function() {
+
+	// request all the search parameters for an amazon search
+	// pass the parameters through the amazon function
+	
+	Debugbar::info('we called the search amazon debugger');
+	Debugbar::info(Request::get('searchAmazon'));
+	$dataKeywords = Request::get('searchAmazon');
+	Debugbar::info($dataKeywords);
+
+
+
+
+	$conf = new GenericConfiguration();
+
+	$conf
+	    ->setCountry('com')
+	    ->setAccessKey('AKIAJRZOBMHPLHDBMH4A')
+	    ->setSecretKey('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')
+	    ->setAssociateTag('peoplerally-20')
+	    ->setRequest('\ApaiIO\Request\Soap\Request')
+	    ->setResponseTransformer('\ApaiIO\ResponseTransformer\ObjectToArray');
+
+	$search = new Search();
+	$search->setCategory('All');
+	$search->setKeywords($dataKeywords);
+	$search->setResponsegroup(array('Small', 'Offers', 'Images'));
+
+	$apaiIo = new ApaiIO($conf);
+	$response = $apaiIo->runOperation($search);
+	$parsedResponse = $response;
+
+	//Debugbar::info($parsedResponse);
+
+	// get count of items to loop through items from amazon
+	$length = count($parsedResponse['Items']['Item']);
+	// Debugbar::info($length);
+	$simpleArray = array();
+	// use for loop
+	for($i = 0; $i < $length; $i++) {
+
+		$p = $parsedResponse['Items']['Item'][$i];
+
+		// push info to an array
+		$simpleArray[] = $p;
+
+	};
+	
+	// return an object to vue instance
+
+	return Response::json($simpleArray);
+	// return dd($parsedResponse['Items']['Item'][0]['Offers']['Offer']['OfferListing']['Price']['FormattedPrice']);
+});
 
 //Authentication
 

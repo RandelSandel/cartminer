@@ -12,6 +12,78 @@
     background: #F6624A;
     margin: 40px auto 0; }
 
+body {
+  /* Size of largest container or bigger */
+  min-width: 1200px;
+  width: auto !important;
+  width: 1200px; }
+
+.mainDIV {
+  position: relative;
+  background: yellow;
+  width: 100%;
+  min-width: 315px; }
+
+.leftDIV {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 50px;
+  width: 30%;
+  background: #555;
+  border-right: 1px solid #ccc; }
+
+.middleDIV {
+  position: relative;
+  top: 0%;
+  left: -2.5%;
+  height: 50px;
+  width: 35%;
+  background: #555;
+  margin: 0px auto; }
+
+.rightDIV {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 50px;
+  width: 35%;
+  background: #555;
+  border-left: 1px solid #ccc; }
+
+.mainDIVBody {
+  position: relative;
+  background: none;
+  width: 100%;
+  min-width: 315px; }
+
+.leftDIVBody {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  height: 600px;
+  width: 30%;
+  background: none;
+  border-right: 1px solid #ccc; }
+
+.middleDIVBody {
+  position: relative;
+  top: 0%;
+  left: -2.5%;
+  height: 600px;
+  width: 35%;
+  background: none;
+  margin: 0px auto; }
+
+.rightDIVBody {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  height: 600px;
+  width: 35%;
+  background: none;
+  border-left: 1px solid #ccc; }
+
 .productList {
   padding: 1em 1em 1em;
   background-color: #ffffff;
@@ -32,6 +104,9 @@
   background-color: #5eb8ad; }
   .actives:hover #productListName {
     color: #ffffff; }
+
+.selectProductWithColor {
+  border: 3px solid #5eb8ad; }
 
 .tooltip {
   font-size: 1.2em; }
@@ -73,5 +148,8 @@
 
 .linkList:nth-last-child(-n+1) {
   border-bottom-width: 1.33px; }
+
+.linkList:first-child {
+  border-top-width: 0px; }
 
 /*# sourceMappingURL=app.css.map */
