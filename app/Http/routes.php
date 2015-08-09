@@ -127,9 +127,9 @@ post('api/searchamazon', function() {
 
 	$conf
 	    ->setCountry('com')
-	    ->setAccessKey('AKIAJRZOBMHPLHDBMH4A')
-	    ->setSecretKey('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')
-	    ->setAssociateTag('peoplerally-20')
+	    ->setAccessKey('')
+	    ->setSecretKey('')
+	    ->setAssociateTag('')
 	    ->setRequest('\ApaiIO\Request\Soap\Request')
 	    ->setResponseTransformer('\ApaiIO\ResponseTransformer\ObjectToArray');
 
