@@ -10,6 +10,11 @@ Tasks:
  ✔ hide the product name and description text when creating a new product @done (15-08-04 15:29)
  ✔ after the edit form is saved it should disappear @done (15-07-28 16:52)
  ✔ view only the first link or the active/primary link @done (15-08-04 15:29)
+ ☐ fix create product button
+ ☐ fix edit product button
+ ☐ make check list button dynamic
+ ☐ stucture links layout list
+ ☐ add amazon links to link list feature and have the price and other variables update automatically
 
 features:
   ☐ create "custom" product link form and button
@@ -17,7 +22,7 @@ features:
   ☐ edit a product link form and button
   ☐ filter feature
   ☐ highliight primary or recommended link instead of showing one
-  ☐ make check list button dynamic with active state if
+  ☐ make check list button dynamic with active state 
 
 
   bugs:

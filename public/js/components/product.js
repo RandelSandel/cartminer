@@ -16,9 +16,6 @@ new Vue ({
 
 		// deleteTriggered: null,
 
-		// combined links for all the products of one cart
-		combo: [],
-
 		newProducts: {
 
 			id: '',
@@ -32,6 +29,8 @@ new Vue ({
 
 		// the current product id the mouse is hovering over
 		currentProductIdFromHover: '',
+
+		productIdAndLinks: [],
 
 		// an array of the links for only one specific product
 		links: [],
@@ -63,6 +62,11 @@ new Vue ({
 		},
 
 		searchResponse: [],
+
+		linkToAdd: {
+			custom_id: '',
+			product_id: ''
+		},
 		
 
 		filterByKey: '',
@@ -72,9 +76,7 @@ new Vue ({
 		reverseLink: false,
 
 		// the primary key for the newly created product
-		lastProductId: '',
-
-		primaryProductLink: []
+		lastProductId: ''
 
 	},
 
@@ -94,89 +96,51 @@ new Vue ({
 
     		console.log('new: %s, old: %s', val, oldVal);
       		
-      		
       		// true means we do not see the form, however if we click delete we should still see the form
       		this.createProduct = true; 
       		this.editProduct = true;
 
-      		// true means we do in fact show the container
-      		// this.showAllLinks: true;
 
-      		// if the right module was not used yet set its content to null. This way when 
-      		// the page first loads nothing will be displayed
+      		// if the right module was not used yet set its content to null. This way when the page first loads nothing will be displayed
       		if (oldVal != null) {
       			this.links = [];
 
       		}
       		else {}
 
-      		// we want to display the product name and description before the product links 
-      		// todo this we match the current product.id i.e. "val" to the correct product 
-      		// from the product array
       		var pLen = this.productsLength;
 
       		for (var x = 0; x < pLen; x++) {
 
-      			// if val is == to this.products[x].id
-      			// then set name and description to approprate data var
+      			// then set clicked name and description to approprate data variables
       			if (val == this.products[x].id) {
 
-      				var productName = this.products[x].product_name;
-      				var productDescription = this.products[x].product_description;
-      				var primaryProductLinkId = this.products[x].primary_product_link_id;
+      				this.newProducts.product_name = this.products[x].product_name;
+      				this.newProducts.product_description = this.products[x].product_description;
+      				this.newProducts.primary_product_link_id = this.products[x].primary_product_link_id;
 
-      				// pn and pd are used to set the data to the DOM
-      				this.newProducts.product_name = productName;
-      				this.newProducts.product_description = productDescription;
-      				this.newProducts.primary_product_link_id = primaryProductLinkId;
-      				//console.log(this.newProducts.product_name);
       			}
       			else{}
 
       		}
 
-      		// for each c in combo if val is == to product_id then push val to li
-      		var len = this.combo.length;
+    		// we set the links array for the DOM
+      		var length = this.productIdAndLinks.length;
 
-      		//console.log(len);
+      		for( var i = 0; i < length; i++) {
 
-      		for( var i = 0; i < len; i++) {	
+      			if (val == this.productIdAndLinks[i].product_id) {
 
-      			var prod_id = this.combo[i].product_id;
-      			//console.log(prod_id);
-      			
-      			// we identify the corresponding product link(s) with the product id
-      			if (prod_id == val) {
+      				this.links = this.productIdAndLinks[i].product_links;
 
-      				// we push the matching product links to the link array
-      				this.links.push(this.combo[i]);
-
+      				break;
       			}
-      			else {}
-
+      			else{}
       		}
+      	},
 
-      		// sets the primary link
-      		// if the primary product links id is NOT equal to 0 then we set the first link 
-      		// in the array as the primary link  
-      		// if (this.newProducts.primary_product_link_id != 0)	{
-      		// 	this.searchLinks = this.newProducts.primary_product_link_id;
-      		// }
-
-      		// else {
-
-      		// 	// else we use the first link in the array as the primary or there is no
-      		// 	// links so we dont do anything
-      		// 	console.log(this.links[0].id);
-      		// 		if (this.links[0].id = null){
-      		// 			console.log('there are no links...its null');
-      		// 			this.searchLinks = null;
-      		// 		}
-      		// 		else{
-      		// 			this.searchLinks = this.links[0].id;
-      		// 		}
-      				
-      		// }
+      	'linkToAdd.id': function (val, oldVal) {
+      		console.log('the link to add has changed');
       	}
     },
 
@@ -190,55 +154,21 @@ new Vue ({
 	methods: {
 		
 		fetchProducts: function() {
+			this.$http.get('/api/fetchProducts/' + this.cart_id, function(response) {
 
-			// set all the products to its assigned array and/or object
-			this.$http.get('/api/products/' + this.cart_id, function(products) {
+				//console.log(response.products);	
+				this.products = response.products;
 
-				// we set the products to the product object
-				this.products = products;
-				
-				// we get the length of the product object
-				var len = this.products.length;
-				//console.log(len);
+				console.log(response.links[0].product_id);
+				this.productIdAndLinks = response.links;
 
-				for (var i = 0; i < len; i++) {
 
-					// get the unique id for each product
-					r = this.products[i].id;
-					//console.log(this.products[i]);
-					
-					// use the product id "r" to get the links for each product
-					this.$http.get('/api/product_links/' + r, function(product_links) {	
-
-						var numberOfArrays = product_links[1].length; // number of links for a single product
-						// console.log(numberOfArrays);
-						for (var n = 0; n < numberOfArrays; n++){
-
-							var o = product_links[1][n];
-							//console.log(o);
-
-							// for each products "id" we check to see where the product_links "product_id" matches
-							for (var k = 0; k < len; k++){
-
-								if (this.products[k].id == o.product_id){
-
-									// console.log(o);
-									// when the == we join the link to the product
-									this.combo.push(o);
-								}
-								else {
-									// we do nothing if there is no match
-								}
-							}
-						}
-					});	
-				}
-			});	
+			}.bind(this));
 		},
 
 		prepareToAddProduct: function () {
 
-			// we set the form to blank
+			// we set the create form to blank
 			this.newProducts.id = '';
 			this.newProducts.product_name = '';
 			this.newProducts.product_description = '';
@@ -374,15 +304,31 @@ new Vue ({
 
       		this.$http.post('/api/searchamazon', searchInfo, function(response) {
 
-      			console.log(response[0].ASIN);
-      			console.log(response[0].DetailPageURL);
-      			console.log(response[0].Offers.Offer.OfferListing.Price.FormattedPrice);
-      			console.log(response[0].ItemAttributes.Title);
+      			// console.log(response[0].ASIN);
+      			// console.log(response[0].DetailPageURL);
+      			// console.log(response[0].Offers.Offer.OfferListing.Price.FormattedPrice);
+      			// console.log(response[0].ItemAttributes.Title);
 
       			this.searchResponse = response;
 
       		}.bind(this));
 
+      	},
+
+      	onAddLink: function(e) {
+      		e.preventDefault();
+
+      		this.linkToAdd.product_id = this.newProducts.id
+      		var newLinkInfo = this.linkToAdd
+
+      		// update the DB then after a success message...
+      		this.$http.post('/api/addNewLink', newLinkInfo, function(response) {
+
+      			console.log(response.success);
+
+      		});
+      		// update the DOM by updating both links[] and productIdAndLinks[]...or
+      		// update links[] directly for speed and have pusher update productIdAndLinks[]
       	}
 	}
 });

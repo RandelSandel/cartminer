@@ -137,6 +137,45 @@
 
 		  	</div>
 
+
+		  	<!-- create form -->
+		  	<div v-show="! createProduct" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 3px solid #5eb8ad;">
+				<div>
+					<h4>Add new product info</h4>
+				</div>
+
+				<form method="POST" v-on="submit: onCreateProduct">
+					<div class="form-group" style="
+						padding-right: 30px;
+						margin-right: 0px;"
+						>
+						<br>
+
+						<input type="text" class="form-control" placeholder="Product name..." v-model="newProducts.product_name">
+						
+						<br>
+						
+						<textarea type="text" class="form-control" rows="3" placeholder="Product description..." v-model="newProducts.product_description">
+													
+						</textarea>
+
+						
+						<br>
+						<div style="float: right">
+
+							<button type="submit" class="btn btn-primary">Save</button>
+
+							<button type="button" class="btn btn-danger" 
+								v-on="click: createProduct = true"
+								>
+								Cancel
+							</button>
+
+						</div>
+					</div>
+				</form>
+			</div>
+
 		  		<!-- product list -->
 		  	<div v-repeat="products | filterBy search in 'product_name' | orderBy sortProductsKey reverseProduct"
 				v-on="click: newProducts.id = id, mouseenter: currentProductIdFromHover = id, click: showAllLinks = true"
@@ -166,6 +205,54 @@
 					<i id="productListName" class="fa" style="margin-left: 26px; margin-top: 5px; font-size: .9em;" v-if="newProducts.id == id">
 						Note: @{{ product_description }}
 					</i>
+
+
+					<!-- edit form -->
+					<!-- make this a if stament, e.g. v-if="this id is equal to the selected id" -->
+					<div v-show="! editProduct" v-if="id == newProducts.id" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 0px solid #5eb8ad;">
+
+
+						<div>
+							<h4>Edit product info</h4>
+						</div>
+
+						<form method="POST" v-on="submit: onEditProduct">
+							<div class="form-group" style="
+								padding-right: 30px;
+								margin-right: 0px;"
+								>
+								<br>
+								
+								<input type="text" class="form-control" v-model="newProducts.product_name">
+								
+								<br>
+								
+								<textarea type="text" class="form-control" rows="3" v-model="newProducts.product_description">
+															
+								</textarea>
+
+								
+								<br>
+								<div style="float: right">
+
+									<button type="submit" class="btn btn-primary">
+										Save
+									</button>
+
+									<button type="button" class="btn btn-danger" 
+										v-on="click: editProduct = true"
+										>
+										Cancel
+									</button>
+
+								</div>
+							</div>
+						</form>
+
+					</div>
+
+
+
 			</div>
 
 				<!-- <pre>clicked id: @{{ newProducts.id }}</pre>
@@ -194,89 +281,11 @@
 				@{{ newProducts.product_description }}
 			</i> -->
 
-			<!-- create form -->
-				<div v-show="! createProduct">
-					<h4>Add new product info</h4>
-				</div>
-
-				<form method="POST" v-on="submit: onCreateProduct">
-					<div class="form-group" style="
-						padding-right: 30px;
-						margin-right: 0px;"
-						v-show="! createProduct"
-						>
-						<br>
-
-						<input type="text" class="form-control" placeholder="Product name..." v-model="newProducts.product_name">
-						
-						<br>
-						
-						<textarea type="text" class="form-control" rows="3" placeholder="Product description..." v-model="newProducts.product_description">
-													
-						</textarea>
-
-						
-						<br>
-						<div style="float: right">
-
-							<button type="submit" class="btn btn-primary">Save</button>
-
-							<button type="button" class="btn btn-danger" 
-								v-on="click: createProduct = true"
-								>
-								Cancel
-							</button>
-
-						</div>
-					</div>
-				</form>
-
-				<!-- edit form -->
-				<div v-show="! editProduct">
-					<h4>Edit product info</h4>
-				</div>
-
-				<form method="POST" v-on="submit: onEditProduct">
-					<div class="form-group" style="
-						padding-right: 30px;
-						padding-left: 30px;
-						margin-right: 0px;
-						margin-bottom: 35px;"
-						v-show="! editProduct"
-						>
-						<br>
-						
-						<input type="text" class="form-control" v-model="newProducts.product_name">
-						
-						<br>
-						
-						<textarea type="text" class="form-control" rows="3" v-model="newProducts.product_description">
-													
-						</textarea>
-
-						
-						<br>
-						<div style="float: right">
-
-							<button type="submit" class="btn btn-primary">
-								Save
-							</button>
-
-							<button type="button" class="btn btn-danger" 
-								v-on="click: editProduct = true"
-								>
-								Cancel
-							</button>
-
-						</div>
-					</div>
-				</form>
-
 	    	<div style="overflow-y: auto; height: 500px;">
 				<div v-repeat="links | filterBy searchLinks in filterByKey |orderBy sortLinksKey reverseLink" v-show="showAllLinks" class="linkList">
 
-					<i class="fa"> @{{ merchant_name }} </i>
-					<i class="fa"> @{{ id }} </i>
+					<!-- <i class="fa"> @{{ merchant_name }} </i> -->
+					<i class="fa"> @{{ title }} </i>
 
 					<div class="row">
 						<div class="col-sm-8"><p>@{{ product_link }}</p></div>
@@ -290,21 +299,12 @@
 
 	    <div class="rightDIVBody">
 
-	    	 <!-- <pre>searchAmazon: @{{ searchMerchantsInfo.searchAmazon }}</pre>  -->
+	    	 <pre>link we are adding from button: @{{ linkToAdd.custom_id }}</pre> 
 
 	    	 <!-- search response -->
 
 	    	 <div style="overflow-y: auto; height: 500px;">
 	    	 	<div v-repeat="searchResponse" class="linkList">
-
-	    	 		<!-- <img src="@{{ MediumImage.URL }}" alt="...">
-	    	 		<i class="fa"> @{{ ItemAttributes.Title }} </i>
-	    	 		<pre>@{{ MediumImage.URL }}</pre> 
-
-	    	 		<div class="row">
-						<div class="col-sm-8"><p>@{{ DetailPageURL }}</p></div>
-						<div class="col-sm-4"><p>@{{ Offers.Offer.OfferListing.Price.FormattedPrice }}</p></div>
-					</div> -->
 
 					<div class="media">
 
@@ -321,6 +321,10 @@
 
 					</div>
 
+					<form method="POST" v-on="submit: onAddLink, click: linkToAdd.custom_id = ASIN">
+						<p>@{{ ASIN }}</p>
+						<button type="submit">add</button>
+	    	 		</form>
 	    	 		
 	    	 	</div>
 	    	 </div>

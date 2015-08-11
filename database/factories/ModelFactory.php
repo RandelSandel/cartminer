@@ -1,5 +1,6 @@
 <?php
 require 'database/params/FactoryClass.php';
+
 $factory->define(App\User::class, function ($faker) {
     return [
         'name' => $faker->name,
@@ -57,6 +58,7 @@ $factory->define(App\Product_link::class, function ($faker) {
     $num = count($products->product_id());
         
     return [
+        'custom_link_state' => $faker->boolean($chanceOfGettingTrue = 0),
         'merchant_name' => $faker->company,
         'product_id' => $faker->numberBetween($min = 1, $max = $num), 
         'product_link' => $faker->url,

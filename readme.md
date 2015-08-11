@@ -80,6 +80,8 @@ left alone these directories, with different files than 5.0
 
 update 8/4
 
+added faker package to help make fake data
+	see github for installation instructions
 
 added laravel-debugbar to see debugbar() in browser
 	see github repository for install instructions
