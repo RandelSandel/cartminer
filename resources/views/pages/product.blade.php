@@ -208,7 +208,6 @@
 
 
 					<!-- edit form -->
-					<!-- make this a if stament, e.g. v-if="this id is equal to the selected id" -->
 					<div v-show="! editProduct" v-if="id == newProducts.id" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 0px solid #5eb8ad;">
 
 
@@ -258,40 +257,57 @@
 				<!-- <pre>clicked id: @{{ newProducts.id }}</pre>
 				<pre>clicked Product Name: @{{ newProducts.product_name }}</pre>
 				<pre>Hovering: @{{ currentProductIdFromHover }}</pre>
-				<pre>Product Length: @{{ productsLength }}</pre> -->
-				<!-- <pre>showAllLinks: @{{ showAllLinks }}</pre>--> 
+				<pre>Product Length: @{{ productsLength }}</pre>
+				<pre>showAllLinks: @{{ showAllLinks }}</pre> 
+				<pre>Products: @{{ products }}</pre>  -->
 	    </div>
 
 	    <div class="middleDIVBody">
 
 	    	<!-- Header Text with edit button -->
 									
-		<!-- 	<i class="fa" style="font-size: 1.30em; font-weight: 400; color: #5eb8ad; width: 100%; padding-bottom: 10px;" v-show="editProduct">
-				@{{ newProducts.product_name }}
-				<span  style="font-size: .75em; color: #5eb8ad"
-					class="glyphicon glyphicon-pencil"
-					v-on="click: editProduct = false"
-					v-if="newProducts.id != ''"
-					>
-				</span>
-			</i>
-
-			
-			<i v-show="editProduct" class="fa" style="color: #777777;">
-				@{{ newProducts.product_description }}
-			</i> -->
-
 	    	<div style="overflow-y: auto; height: 500px;">
-				<div v-repeat="links | filterBy searchLinks in filterByKey |orderBy sortLinksKey reverseLink" v-show="showAllLinks" class="linkList">
+				<div v-repeat="links | filterBy searchLinks in filterByKey | orderBy sortLinksKey reverseLink" 
+					v-show="showAllLinks" class="linkList"
+					>
 
 					<!-- <i class="fa"> @{{ merchant_name }} </i> -->
-					<i class="fa"> @{{ title }} </i>
+					<!-- <i class="fa"> @{{ title }} </i> -->
 
-					<div class="row">
-						<div class="col-sm-8"><p>@{{ product_link }}</p></div>
-						<div class="col-sm-4"><p>@{{ price | currency }}</p></div>
-					</div>	
+					<span style=" float: right; color: #777;"   
+							class="glyphicon glyphicon-trash"
+							v-on="mouseenter: currentProductLinkIdFromHover = id, click: onDeleteLink"
+							>
+					</span>
+
+					<!-- <div class="row"> -->
+						<!-- <div class="col-sm-8"><p>@{{ product_link }}</p></div> -->
+						<!-- <div class="col-sm-4"><p>@{{ price | currency }}</p></div> -->
+					<!-- </div> -->	
+
+					<div class="media">
+
+						<div class="media-left">
+							<a href="@{{ product_link }}">
+								<img class="media-object" src="@{{ image_url }}" alt="...">
+							</a>
+						</div>
+
+						<div class="media-body">
+							<i style="font-size: .9em;" class="fa media-heading">@{{ title }}</i>
+							@{{ price | currency }}
+						</div>
+
+					</div>
+
+
+					<form>
+    					<button formaction="@{{ product_link }}">Link</button>
+					</form>
+
 				</div>
+				<!-- <pre>link[]: @{{ links }}</pre> -->
+
 			</div>
 	    </div>
 
@@ -299,8 +315,8 @@
 
 	    <div class="rightDIVBody">
 
-	    	 <pre>link we are adding from button: @{{ linkToAdd.custom_id }}</pre> 
-
+	    	 <!-- <pre>custom_id we are adding from button: @{{ linkToAdd.custom_id }}</pre> 
+	    	 <pre>title we are adding from button: @{{ linkToAdd.title }}</pre> -->
 	    	 <!-- search response -->
 
 	    	 <div style="overflow-y: auto; height: 500px;">
@@ -321,7 +337,13 @@
 
 					</div>
 
-					<form method="POST" v-on="submit: onAddLink, click: linkToAdd.custom_id = ASIN">
+					<form method="POST" v-on="submit: onAddLink, 
+						click: linkToAdd.custom_id = ASIN, 
+						click: linkToAdd.title = ItemAttributes.Title,
+						click: linkToAdd.image_url = MediumImage.URL,
+						click: linkToAdd.price = Offers.Offer.OfferListing.Price.Amount,
+						click: linkToAdd.product_link = DetailPageURL
+						">
 						<p>@{{ ASIN }}</p>
 						<button type="submit">add</button>
 	    	 		</form>

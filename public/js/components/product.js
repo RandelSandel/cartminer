@@ -30,6 +30,8 @@ new Vue ({
 		// the current product id the mouse is hovering over
 		currentProductIdFromHover: '',
 
+		currentProductLinkIdFromHover: '',
+
 		productIdAndLinks: [],
 
 		// an array of the links for only one specific product
@@ -65,7 +67,13 @@ new Vue ({
 
 		linkToAdd: {
 			custom_id: '',
-			product_id: ''
+			product_id: '',
+			title: '',
+			product_link: '',
+			price:'',
+			image_url:'',
+			image_height:'',
+			image_width:''
 		},
 		
 
@@ -139,8 +147,12 @@ new Vue ({
       		}
       	},
 
-      	'linkToAdd.id': function (val, oldVal) {
+      	'linkToAdd.custom_id': function (val, oldVal) {
       		console.log('the link to add has changed');
+
+      		// this.linkToAdd.custom_id = '';
+      		// this.linkToAdd.title = '';
+
       	}
     },
 
@@ -156,7 +168,7 @@ new Vue ({
 		fetchProducts: function() {
 			this.$http.get('/api/fetchProducts/' + this.cart_id, function(response) {
 
-				//console.log(response.products);	
+				// console.log(response.products);	
 				this.products = response.products;
 
 				console.log(response.links[0].product_id);
@@ -308,6 +320,9 @@ new Vue ({
       			// console.log(response[0].DetailPageURL);
       			// console.log(response[0].Offers.Offer.OfferListing.Price.FormattedPrice);
       			// console.log(response[0].ItemAttributes.Title);
+      			// console.log(response[0].MediumImage.URL);
+      			// console.log(response[0].MediumImage.Height);
+      			// console.log(response[0].MediumImage.Width);
 
       			this.searchResponse = response;
 
@@ -318,17 +333,49 @@ new Vue ({
       	onAddLink: function(e) {
       		e.preventDefault();
 
-      		this.linkToAdd.product_id = this.newProducts.id
-      		var newLinkInfo = this.linkToAdd
+      		this.linkToAdd.product_id = this.newProducts.id;
+
+      		var newLinkInfo = this.linkToAdd;
 
       		// update the DB then after a success message...
       		this.$http.post('/api/addNewLink', newLinkInfo, function(response) {
-
       			console.log(response.success);
-
       		});
-      		// update the DOM by updating both links[] and productIdAndLinks[]...or
-      		// update links[] directly for speed and have pusher update productIdAndLinks[]
+
+      		var customFormattedPrice = (this.linkToAdd.price / 100).toFixed(2);
+			this.linkToAdd.price = customFormattedPrice;
+
+			var newLinkInfoVue = this.linkToAdd;
+
+      		// update the DOM by updating both links[] and productIdAndLinks[]
+      		this.links.push(newLinkInfoVue);
+      		// we update productIdAndLinks by calling the function
+      		this.fetchProducts();
+
+      		this.linkToAdd = { custom_id: '', product_id: '', title: '', product_link: '', price:'' };
+      	},
+
+      	onDeleteLink: function() {
+
+      		// get the link id that we want to delete
+      		// delete the link from the DB with the deleteLink API
+      		// if successfull update the vue instance
+
+      		var val = this.currentProductLinkIdFromHover;
+
+      		this.$http.get('/api/deleteLink/' + val);
+
+      		var len = this.links.length;
+      		// console.log(len);
+
+      		for (var i = 0; i < len; i++){
+      			if (this.links[i].id == val){
+      				this.links.splice(i, 1);
+      				return;
+      			}
+      			else{}
+      		}
+
       	}
 	}
 });

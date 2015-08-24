@@ -26,6 +26,14 @@ class ApiController extends Controller
     }
 
 
+    public function deleteLink($id) {
+
+        $d = \App\Product_link::find($id);
+        $d->delete();
+        return "deleted";
+    }
+
+
     public function createProduct(Request $request) {
 
         $data = \App\Product::create($request->all());
@@ -90,11 +98,7 @@ class ApiController extends Controller
                     continue;
                 }
             }
-
-
             // and custom_id (ASIN).
-            
-
             $singleIdAndLinkArray = array('product_id' => $productIdArray[$n], 'product_links' => $singleProductLink);
             $idAndLinkArray [] = $singleIdAndLinkArray;
         };
@@ -105,7 +109,6 @@ class ApiController extends Controller
         //return dd($numberOfLinksInSingleProduct, $productAndIDLinkArrayCombo, $singleProductLink, $itemToBeAdded); //cartminer.app/api/fetchproducts/10
 
     }
-
 
 
 	public function searchAmazon(Request $request) {
@@ -193,6 +196,10 @@ class ApiController extends Controller
         $data->custom_id = $request->get('custom_id');
         $data->custom_link_state = 1;
         $data->product_id = $request->get('product_id');
+        $data->image_url = $request->get('image_url');
+        $data->product_link = $request->get('product_link');
+        $data->title = $request->get('title');
+        $data->price = $request->get('price');
 
         if($data->save()) {
             return \Response::json(array('success' => true, 'last_insert_id' => $data->id), 200);

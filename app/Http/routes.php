@@ -33,6 +33,9 @@ Route::post('api/createProduct', 'ApiController@createProduct');
 // deletes a product completely
 Route::get('api/deleteproduct/{id}', 'ApiController@deleteProduct');
 
+// deletes a product_link completely
+Route::get('api/deleteLink/{id}', 'ApiController@deleteLink');
+
 Route::post('api/searchamazon', 'ApiController@searchAmazon');
 
 

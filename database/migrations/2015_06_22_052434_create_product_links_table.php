@@ -19,6 +19,9 @@ class CreateProductLinksTable extends Migration
             $table->integer('product_id')->unsigned();
             $table->string('product_link', 255);
             $table->decimal('price', 8, 2);
+            $table->string('image_url');
+            $table->integer('image_height');
+            $table->integer('image_width');
             $table->integer('quantity');
             $table->decimal('shipping_cost', 8, 2);
             $table->boolean('shipping_free');

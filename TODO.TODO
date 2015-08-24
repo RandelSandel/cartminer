@@ -1,3 +1,4 @@
+Products Page:
 Tasks:
  ✔ add product name and product description to right module @done (15-07-16 14:21)
  ✔ make top box area and set as partial @done (15-07-16 18:31)
@@ -10,19 +11,18 @@ Tasks:
  ✔ hide the product name and description text when creating a new product @done (15-08-04 15:29)
  ✔ after the edit form is saved it should disappear @done (15-07-28 16:52)
  ✔ view only the first link or the active/primary link @done (15-08-04 15:29)
- ☐ fix create product button
- ☐ fix edit product button
- ☐ make check list button dynamic
+ ✔ fix create product button @done (15-08-20 12:37)
+ ✔ fix edit product button @done (15-08-20 12:37)
  ☐ stucture links layout list
- ☐ add amazon links to link list feature and have the price and other variables update automatically
 
 features:
   ☐ create "custom" product link form and button
-  ☐ delete a product link button
+  ✔ delete a product link button @done (15-08-21 15:22)
   ☐ edit a product link form and button
-  ☐ filter feature
+  ☐ filter features
   ☐ highliight primary or recommended link instead of showing one
   ☐ make check list button dynamic with active state 
+
 
 
   bugs:
@@ -32,6 +32,20 @@ features:
                 - turn the createProduct state to "false" when selecting a product
                 @done (15-07-27 14:39)
        ✔ if in edit mode and we change to a different product before cancelling or saveing we need to stop showing the edit form @done (15-08-04 15:30)
+       ☐ have the fetchproducts api pull from database instead of the amazon api...use a scheduling or some other method to update the links
+       ☐ when creating and deleting links the DOM doesn't update properly when clicking on a new product then going back to the original
+
+
+Dashboard Page:
+Tasks: 
+
+
+
+ Features:
+   ☐ create add cart button, form, and api
+   
+
+
 
     
 
