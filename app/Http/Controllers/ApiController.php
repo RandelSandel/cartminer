@@ -69,35 +69,35 @@ class ApiController extends Controller
             // if the product link is taken from a merchant ( is not custom ) we use the ASIN to get the up to date product info from the merchant
            
             // get the length of the $singleProductLink array
-            $numberOfLinksInSingleProduct = count($singleProductLink);
+            // $numberOfLinksInSingleProduct = count($singleProductLink);
            
-            // use a for loop to go through each product_link
-            for ($x = 0; $x < $numberOfLinksInSingleProduct; $x++) {
+            // // use a for loop to go through each product_link
+            // for ($x = 0; $x < $numberOfLinksInSingleProduct; $x++) {
 
-                // if the product_link custom_link != 0 then get updated info from amazon
-                if ($singleProductLink[$x]['custom_link_state'] != 0) {
+            //     // if the product_link custom_link != 0 then get updated info from amazon
+            //     if ($singleProductLink[$x]['custom_link_state'] != 0) {
 
-                    $ASIN_id = $singleProductLink[$x]['custom_id'];
+            //         $ASIN_id = $singleProductLink[$x]['custom_id'];
                     
-                    // use the itemLookUp function to fetch the updated data
-                    $itemToBeAdded = $this->itemLookUp($ASIN_id);
+            //         // use the itemLookUp function to fetch the updated data
+            //         $itemToBeAdded = $this->itemLookUp($ASIN_id);
 
-                    $price = $itemToBeAdded['Items']['Item']['Offers']['Offer']['OfferListing']['Price']['FormattedPrice'];
-                    $product_link = $itemToBeAdded['Items']['Item']['DetailPageURL'];
-                    $title = $itemToBeAdded['Items']['Item']['ItemAttributes']['Title'];
+            //         $price = $itemToBeAdded['Items']['Item']['Offers']['Offer']['OfferListing']['Price']['FormattedPrice'];
+            //         $product_link = $itemToBeAdded['Items']['Item']['DetailPageURL'];
+            //         $title = $itemToBeAdded['Items']['Item']['ItemAttributes']['Title'];
 
                     
-                    // then update each variable with the new data
-                    $singleProductLink[$x]['product_link'] = $product_link;
-                    $singleProductLink[$x]['price'] = $price;
-                    $singleProductLink[$x]['title'] = $title;
+            //         // then update each variable with the new data
+            //         $singleProductLink[$x]['product_link'] = $product_link;
+            //         $singleProductLink[$x]['price'] = $price;
+            //         $singleProductLink[$x]['title'] = $title;
 
-                }
-                // else we continue passing through the custom info
-                else{
-                    continue;
-                }
-            }
+            //     }
+            //     // else we continue passing through the custom info
+            //     else{
+            //         continue;
+            //     }
+            // }
             // and custom_id (ASIN).
             $singleIdAndLinkArray = array('product_id' => $productIdArray[$n], 'product_links' => $singleProductLink);
             $idAndLinkArray [] = $singleIdAndLinkArray;

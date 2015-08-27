@@ -4,6 +4,7 @@ use Illuminate\Database\Eloquent\Model;
 class Cart extends Model
 {
     protected $fillable = [
+        'id',
     	'user_id', //temporary for testing
     	'cart_name',
     	'cart_description',

@@ -9,12 +9,27 @@ new Vue({
 
 	data: {
 
+		carts: [],
 
 		sortKey:'',
 		
 		reverse: false,
 
 		user_id: '',
+
+		showForm: {
+			createCart: false
+		},
+
+		newCart: {
+			user_id: '',
+			cart_name: '',
+			cart_description: ''
+		},
+
+		currentlyHovering: {
+			cartId: ''
+		}
 
 
 	},
@@ -28,6 +43,14 @@ new Vue({
 
 	
 	methods: {
+
+		fetchCarts: function() {
+
+			this.$http.get('api/carts/' + this.user_id, function(response) {		
+				this.carts = response						
+																			
+			});
+		},
 		
 		sortBy: function(sortKey) {
 			
@@ -42,16 +65,57 @@ new Vue({
 			
 		},
 
-		
+
+		onCreateCart: function(e) {
+			e.preventDefault();
+			console.log('we are trying to create a cart');
+			
+			// set createCart to false so the form dissapears from the DOM
+			this.showForm.createCart = false;
+
+			// set carts user_id (owner) on the server side by calling auth()
+			this.newCart.user_id = this.user_id;
+			// add new product to object
+			var cart = this.newCart;
+			// var t;
+			// presist new product to products table
+			this.$http.post('/api/createCart', cart, function(response) {
+				
+				// we set the new pk to the current id
+				this.newCart.id = response.last_insert_id;
+
+				// add new product info with new pk id to instance for vue to display
+				this.carts.push(this.newCart);
+
+				// we set the newCart data back to nothing
+				this.newCart = { user_id: '', cart_name: '', cart_description: ''};
+
+				// we call the fetchProduct function so we can add links immediately
+				// this.fetchCarts();
 
 
-		fetchCarts: function() {
+			}.bind(this));
 
+		},
 
-			this.$http.get('api/carts/' + this.user_id, function(carts) {		// we use .get() to retrieve a value from the vue instance given an expression
-				this.$set('carts', carts);							// we then set a data value on the key instance given a valid keypath
-																			// in this case we set the value messages to a "messages" array
-			});
+		onDeleteCart: function() {
+
+			var val = this.currentlyHovering.cartId;
+      		// delete the product from products table in the DB
+      		this.$http.get('/api/deleteCart/' + val);
+
+      		// delete and update the carts in the vue instance
+      		var len = this.carts.length;
+      		// console.log(len);
+
+      		for (var i = 0; i < len; i++){
+      			if (this.carts[i].id == val){
+      				this.carts.splice(i, 1);
+      				return;
+      			}
+      			else{}
+      		}
+
 		}
 	}
 

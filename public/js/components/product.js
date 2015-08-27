@@ -1,20 +1,44 @@
 Vue.http.headers.common['X-CSRF-TOKEN'] = document.querySelector('#token').getAttribute('value'); 
 
 
+
 new Vue ({
 	
 	el: '#product',
 	
 	data: {
 
+		windows: {
+
+			Inner: {
+
+				Height: '',
+				Width: ''
+
+			},
+
+		},
+		
+
 		cart_id: '',
 
-		// this is an array of all the products that is seen on the DOM
+		// this is an array of all the products. Includes id, name, description, etc
 		products: [],
 
-		productsLength: '',
+		// this is what's returned from fetchProducts..it includes the product_id and matching product_links
+		productIdAndLinks: [],
 
-		// deleteTriggered: null,
+		// an array of the links for only one specific product
+		links: [],
+
+		// an array of search results
+		searchResponse: [],
+
+		watching: {
+			val: '',
+			oldVal: '',
+			lastEditAttempt: ''
+		},
 
 		newProducts: {
 
@@ -27,45 +51,8 @@ new Vue ({
 
 		},
 
-		// the current product id the mouse is hovering over
-		currentProductIdFromHover: '',
-
-		currentProductLinkIdFromHover: '',
-
-		productIdAndLinks: [],
-
-		// an array of the links for only one specific product
-		links: [],
-
-		// true means we do NOT see the form and false means we do see the form
-		editProduct: true,
-
-		// true means we do NOT see the form and false means we do see the form
-		createProduct: true,
-
-		// false means we do not show the primary product
-		showPrimaryLink: false,
-
-		showAllLinks: false,
-
-		sortProductsBy: 'filtPrimaryLink',
-
-		sortProductsKey: '',
-
-		reverseProduct: false,
-
-		search: '',
-
-		searchLinks: '',
-
-		searchMerchantsInfo: {
-			searchAmazon: '',
-			otherParam: 'hello world'
-		},
-
-		searchResponse: [],
-
 		linkToAdd: {
+			id: '',
 			custom_id: '',
 			product_id: '',
 			title: '',
@@ -75,39 +62,68 @@ new Vue ({
 			image_height:'',
 			image_width:''
 		},
-		
 
+		searchMerchantsInfo: {
+			searchAmazon: '',
+			otherParam: 'hello world'
+		},
+
+		currentlyHovering: {
+			productId: '',
+			linkId: '',
+			editButton: false
+		},
+
+		showForm: {
+			editProduct: false,
+			createProduct: false
+		},
+
+		// do we show the links lists or not?
+		showAllLinks: false,
+
+
+		// this is how we are sorting the products, i.e. product_name, id, etc.
+		sortProductsKey: '',
+		reverseProduct: false,
+		// this is the search products field
+		searchProducts: '',
+		// this is the search links field
+		searchLinks: '',
 		filterByKey: '',
-
 		sortLinksKey: '',
-
-		reverseLink: false,
-
-		// the primary key for the newly created product
-		lastProductId: ''
+		reverseLink: false
 
 	},
 
 	watch: {
 		
-		// UPDATETING THE PRODUCT COUNT/LENGTH IN THE VUE INSTANCE
-		'products': function () {
 
-			var len = this.products.length;
-			this.productsLength = len;
-		},
-
-
-
-		// CREATING A NEW PRODUCT / SELECTING A PRODUCT
+		// SELECTING A PRODUCT
     	'newProducts.id': function (val, oldVal) {
 
     		console.log('new: %s, old: %s', val, oldVal);
-      		
-      		// true means we do not see the form, however if we click delete we should still see the form
-      		this.createProduct = true; 
-      		this.editProduct = true;
 
+    		this.watching.val = val;
+    		this.watching.oldVal = oldVal;
+
+    		if (val == '') {
+    			console.log('the val is null');
+    			this.showForm.createProduct = true;
+      			this.showAllLinks = false;
+      			return;
+      		}
+      		else {
+      			this.showAllLinks = true;
+      			this.showForm.createProduct = false; 
+      		}
+
+      		// if the last edit attempt is differnt than the current product and we are not hovering the edit
+      		// button of the new product then the showForm.editProduct is set to false
+      		if (this.currentlyHovering.editButton == false) {
+      			this.showForm.editProduct = false;
+      		}
+      		else{}
 
       		// if the right module was not used yet set its content to null. This way when the page first loads nothing will be displayed
       		if (oldVal != null) {
@@ -116,7 +132,8 @@ new Vue ({
       		}
       		else {}
 
-      		var pLen = this.productsLength;
+      		var pLen = this.products.length;	
+      		// var pLen = this.productsLength;
 
       		for (var x = 0; x < pLen; x++) {
 
@@ -147,23 +164,37 @@ new Vue ({
       		}
       	},
 
-      	'linkToAdd.custom_id': function (val, oldVal) {
-      		console.log('the link to add has changed');
+     
 
-      		// this.linkToAdd.custom_id = '';
-      		// this.linkToAdd.title = '';
-
-      	}
     },
 
 
 	ready: function() {
 		
-		this.fetchProducts();	
+		this.fetchProducts();
+
+
+
+		// on load we get the pages initial height
+		var x = window.innerHeight;
+		this.windows.Inner.Height = x - 80;
+		// we listen for the resizing of the window and get the current height
+		window.addEventListener("resize", myFunction);
+		var that = this;		
+		function myFunction() {
+			x = window.innerHeight;
+    		console.log(x);
+    		that.windows.Inner.Height = x - 80;
+		};
+
+
 	},
+
+
 
 	
 	methods: {
+
 		
 		fetchProducts: function() {
 			this.$http.get('/api/fetchProducts/' + this.cart_id, function(response) {
@@ -187,11 +218,20 @@ new Vue ({
 
 		},
 
+
+		showEditProductForm: function () {
+
+			this.watching.lastEditAttempt = this.watching.val;
+			this.showForm.editProduct = true;
+
+		},
+
+
 		onEditProduct: function (e) {
 			e.preventDefault();
 
 			// set editProduct to true so the form dissapears from the DOM
-			this.editProduct = true;
+			this.showForm.editProduct = false;
 			
 			var val = this.newProducts.id;
 			//console.log(val);
@@ -207,7 +247,7 @@ new Vue ({
 					console.log("the update was successfull");
 
 					// where the newly edited id is equal to the product id update the product array
-					for (var i = 0; i < this.productsLength; i++) {
+					for (var i = 0; i < this.products.length; i++) {
 
 						if (this.newProducts.id == this.products[i].id) {
 
@@ -217,7 +257,8 @@ new Vue ({
 							// push the updated entry to the product array
 							this.products.push(this.newProducts);
 
-							this.newProducts = { id: '', cart_id: '', product_name: '', product_description: '', active: '0'};
+							// we set id = 0 so the create product form doesn't appear after submitting
+							this.newProducts = { id: '0', cart_id: '', product_name: '', product_description: '', active: '0'};
 
 						}
 						else{}
@@ -236,9 +277,9 @@ new Vue ({
 			e.preventDefault();
 
 			// set createProduct to true so the form dissapears from the DOM
-			this.createProduct = true;
+			this.showForm.createProduct = false;
 
-			// set product cart_id
+			// set product cart_ids
 			this.newProducts.cart_id = this.cart_id;
 
 			// we use 0 as the default for all product with no set primary product id
@@ -250,12 +291,8 @@ new Vue ({
 			// presist new product to products table
 			this.$http.post('/api/createProduct', products, function(response) {
 				
-				// we get the new pk id so we can update the vue instance or DOM
-				this.lastProductId = response.last_insert_id;
-				// console.log(this.lastProductId);
-
 				// we set the new pk to the current id
-				this.newProducts.id = this.lastProductId;
+				this.newProducts.id = response.last_insert_id;
 
 				// add new product info with new pk id to instance for vue to display
 				this.products.push(this.newProducts);
@@ -263,14 +300,21 @@ new Vue ({
 				// we set the newProducts data back to nothing
 				this.newProducts = { id: '', cart_id: '', product_name: '', product_description: '', active: '0', primary_product_link_id: ''};
 
+				// we call the fetchProduct function so we can add links immediately
+				this.fetchProducts();
+
+
 			}.bind(this));
+
+
 		},
+
+
 
 		// deleting a product
       	onDeleteProduct: function () {
 
-      		var val = this.currentProductIdFromHover;
-
+      		var val = this.currentlyHovering.productId;
       		// delete the product from products table in the DB
       		this.$http.get('/api/deleteproduct/' + val);
 
@@ -287,24 +331,7 @@ new Vue ({
       		}
       	},
 
-      	sortProductsBy: function (sortProductsKey){
-      		this.reverseProduct = (this.sortProductsKey == sortProductsKey) ? ! this.reverseProduct : false;
-      		this.sortProductsKey = sortProductsKey;
-      	},
-
-      	sortLinksBy: function (sortLinksKey){
-      		this.reverseLink = (this.sortLinksKey == sortLinksKey) ? ! this.reverseLink : false;
-      		this.sortLinksKey = sortLinksKey;
-      	},
-
-      	filterLinksBy: function (type) {
-
-      		if (type == 'all') {
-
-      			this.searchLinks = '';	
-      		
-      		}
-      	},
+      	
 
       	fetchSearchAmazon: function(e) {
 
@@ -340,19 +367,29 @@ new Vue ({
       		// update the DB then after a success message...
       		this.$http.post('/api/addNewLink', newLinkInfo, function(response) {
       			console.log(response.success);
-      		});
+      			console.log(response.last_insert_id);
+      			//get the new product_link id so we can delete it if desired
+      			this.linkToAdd.id = response.last_insert_id;
 
-      		var customFormattedPrice = (this.linkToAdd.price / 100).toFixed(2);
-			this.linkToAdd.price = customFormattedPrice;
+      			var customFormattedPrice = (this.linkToAdd.price / 100).toFixed(2);
+				this.linkToAdd.price = customFormattedPrice;
 
-			var newLinkInfoVue = this.linkToAdd;
+				var newLinkInfoVue = this.linkToAdd;
 
-      		// update the DOM by updating both links[] and productIdAndLinks[]
-      		this.links.push(newLinkInfoVue);
-      		// we update productIdAndLinks by calling the function
-      		this.fetchProducts();
+	      		// update the DOM by updating both links[] and productIdAndLinks[]...this does both for some reason
+	      		this.links.push(newLinkInfoVue);
 
-      		this.linkToAdd = { custom_id: '', product_id: '', title: '', product_link: '', price:'' };
+	      		// we update productIdAndLinks by calling the fetchProducts function
+	      		// WEIRD --- for some reason we don't need to update the productIdAndLinks object as its doing it 
+	      		// on its own when calling "this.links.push(newLinkInfoVue);"
+
+	      		// this.fetchProducts();
+
+	      		this.linkToAdd = { custom_id: '', product_id: '', title: '', product_link: '', price:'' };
+
+      		}.bind(this));
+
+      		
       	},
 
       	onDeleteLink: function() {
@@ -361,7 +398,7 @@ new Vue ({
       		// delete the link from the DB with the deleteLink API
       		// if successfull update the vue instance
 
-      		var val = this.currentProductLinkIdFromHover;
+      		var val = this.currentlyHovering.linkId;
 
       		this.$http.get('/api/deleteLink/' + val);
 
@@ -376,6 +413,25 @@ new Vue ({
       			else{}
       		}
 
+      	},
+
+      	sortProductsBy: function (sortProductsKey){
+      		this.reverseProduct = (this.sortProductsKey == sortProductsKey) ? ! this.reverseProduct : false;
+      		this.sortProductsKey = sortProductsKey;
+      	},
+
+      	sortLinksBy: function (sortLinksKey){
+      		this.reverseLink = (this.sortLinksKey == sortLinksKey) ? ! this.reverseLink : false;
+      		this.sortLinksKey = sortLinksKey;
+      	},
+
+      	filterLinksBy: function (type) {
+
+      		if (type == 'all') {
+
+      			this.searchLinks = '';	
+      		
+      		}
       	}
 	}
 });

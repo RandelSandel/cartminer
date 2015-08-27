@@ -38,7 +38,7 @@
 						<ul class="list-inline">
 							<li style="float: right; padding-right: 0px;">
 								<a href="#" style="padding-right: 20px;"><span class="glyphicon glyphicon-cog" aria-hidden="false" style="font-size: 1.2em;"></span></a>
-								<a href="#" style="padding-right: 0px;"><span class="glyphicon glyphicon-plus" aria-hidden="false" style="font-size: 1.2em;"></span></a>
+								<a v-on="click: showForm.createCart = true" style="padding-right: 0px;"><span class="glyphicon glyphicon-plus" aria-hidden="false" style="font-size: 1.2em;"></span></a>
 								
 							</li>
 						</ul>
@@ -81,23 +81,78 @@
 		</div>
 
 		
-<br>
-		    	
-<script src="/js/vendor/vue.min.js"></script>
-<script src="/js/vendor/vue-resource.min.js"></script>
-
-
-		<!-- listed carts -->
-		<div class="list-group">
+	<br>
+		
+		<!-- <pre>@{{ currentlyHovering.cartId }}</pre> -->
+		<!-- listed carts area -->
+		<div style="border: 0px solid #777;" class="list-group">
 			
-			<ul style="padding-left: 0px; width: 700px; margin: auto;">
-				<a href="product/@{{ id }}" v-repeat="carts | filterBy search | orderBy sortKey reverse" class="list-group-item">
+			<ul style="padding-left: 0px; width: 700px; margin: auto; border: 0px solid #777;">
+
+				<!-- create cart form -->
+				<div v-show="showForm.createCart" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 3px solid #5eb8ad;">
+					<div>
+						<h4>Add new list</h4>
+					</div>
+
+					<form method="POST" v-on="submit: onCreateCart">
+						<div class="form-group" style="
+							padding-right: 30px;
+							margin-right: 0px;"
+							>
+							<br>
+
+							<input type="text" class="form-control" placeholder="List name..." v-model="newCart.cart_name">
+							
+							<br>
+							
+							<textarea type="text" class="form-control" rows="3" placeholder="List description..." v-model="newCart.cart_description">
+														
+							</textarea>
+
+							
+							<br>
+							<div style="float: right">
+
+								<button type="submit" class="btn btn-primary">Save</button>
+
+								<button type="button" class="btn btn-danger" 
+									v-on="click: showForm.createCart = false"
+									>
+									Cancel
+								</button>
+
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<!-- cart list -->
+				<i v-repeat="carts | filterBy search | orderBy sortKey reverse" 
+					class="list-group-item" v-on="mouseover: currentlyHovering.cartId = id" 
+					>
 					
-					<h5> cart name: @{{ cart_name }} </h5>
+					<span style="float: right; color: blue;"   
+						class="glyphicon glyphicon-trash"
+						v-on="click: onDeleteCart"
+						>
+					</span>
+
+					<a href="product/@{{ id }}"> cart name: @{{ cart_name }} </a>
 					<p> cart description: @{{ cart_description }} </p>
 					<p> id: @{{ id }} </p>
+
 					
-				</a>
+
+					<!-- <span  style="font-size: 1em; color: #ffffff; margin-right: 10px; float: right;"
+						class="glyphicon glyphicon-pencil"
+						v-on="click: showEditProductForm, 
+						mouseenter: currentlyHovering.editButton = true, 
+						mouseleave: currentlyHovering.editButton = false"
+						>
+					</span> -->
+					
+				</i>
 			</ul>
 			
 		</div>
@@ -105,6 +160,8 @@
 
 </div>
 
+<script src="/js/vendor/vue.min.js"></script>
+<script src="/js/vendor/vue-resource.min.js"></script>
 <script src="js/components/dashboard.js"></script>
 
 

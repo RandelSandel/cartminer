@@ -123,7 +123,8 @@ body {
   /* Size of largest container or bigger */
   min-width: 1200px;
   width: auto !important;
-  width: 1200px; }
+  width: 1200px;
+  height: 100%; }
 
 .mainDIV {
   position: relative;
@@ -138,7 +139,7 @@ body {
   height: 50px;
   width: 30%;
   background: #555;
-  border-right: 1px solid #ccc; }
+  border-right: 5px solid #ccc; }
 
 .middleDIV {
   position: relative;
@@ -156,28 +157,29 @@ body {
   height: 50px;
   width: 35%;
   background: #555;
-  border-left: 1px solid #ccc; }
+  border-left: 5px solid #ccc; }
 
 .mainDIVBody {
   position: relative;
   background: none;
   width: 100%;
-  min-width: 315px; }
+  min-width: 315px;
+  height: 100%; }
 
 .leftDIVBody {
   position: absolute;
   top: 0px;
   left: 0px;
-  height: 600px;
+  height: 100%;
   width: 30%;
   background: none;
-  border-right: 1px solid #ccc; }
+  border-right: 5px solid #ccc; }
 
 .middleDIVBody {
   position: relative;
   top: 0%;
   left: -2.5%;
-  height: 600px;
+  height: 100%;
   width: 35%;
   background: none;
   margin: 0px auto; }
@@ -186,10 +188,10 @@ body {
   position: absolute;
   top: 0px;
   right: 0px;
-  height: 600px;
+  height: 100%;
   width: 35%;
   background: none;
-  border-left: 1px solid #ccc; }
+  border-left: 5px solid #ccc; }
 
 .productList {
   padding: 1em 1em 1em;
@@ -244,7 +246,7 @@ body {
   color: #ffffff; }
 
 .linkList {
-  border-right-width: 1px;
+  border-right-width: 0px;
   border-left-width: 0px;
   border-top-width: 1px;
   border-bottom-width: 0px;

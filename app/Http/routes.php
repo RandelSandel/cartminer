@@ -14,10 +14,20 @@ Route::get('dashboard', 'PagesController@dashboard');
 // API's
 
 
+// cart stuff
 
 get('api/carts/{id}', function($id) { return App\Cart::where('user_id', $id)->get(); });
 
 get('api/carts', function() {return App\Cart::all(); });
+
+Route::post('api/createCart', 'ApiCartController@createCart');
+
+Route::get('api/deleteCart/{id}', 'ApiCartController@deleteCart');
+
+
+
+
+// product stuff
 
 Route::get('api/itemlookup', 'ApiController@itemLookUp');
 

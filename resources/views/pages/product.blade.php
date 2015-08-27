@@ -73,7 +73,7 @@
 
 	
 	<div class="mainDIVBody">
-	    <div class="leftDIVBody">
+	    <div class="leftDIVBody" v-style="height: windows.Inner.Height + 'px',">
 
 	    	<!-- cart title and description -->
 
@@ -88,12 +88,12 @@
 
 
 				<!-- + -->
-				<a v-on="click: createProduct = false, click: prepareToAddProduct" style="margin-left: 15px;">
+				<span v-on="click: showForm.createProduct = true, click: prepareToAddProduct, click: showAllLinks = false" style="margin-left: 15px;">
 		  				<span class="glyphicon glyphicon-plus" aria-hidden="true" 
 		  					style="font-size: 1.5em; color: #ffffff" 
 		  					data-toggle="tooltip" title="Add Product">
 		  				</span>
-		  		</a>
+		  		</span>
 			  	
 
 		  		
@@ -105,7 +105,7 @@
 
 					<ul class="dropdown-menu" style="width: auto;">
 
-						<li><input v-model="search" class="form-control" style="
+						<li><input v-model="searchProducts" class="form-control" style="
 	    					width: 226.22222042083743px;
 	    					margin-left: 10px;
 	    					margin-right: 10px;"
@@ -139,7 +139,7 @@
 
 
 		  	<!-- create form -->
-		  	<div v-show="! createProduct" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 3px solid #5eb8ad;">
+		  	<div v-show="showForm.createProduct" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 3px solid #5eb8ad;">
 				<div>
 					<h4>Add new product info</h4>
 				</div>
@@ -166,7 +166,7 @@
 							<button type="submit" class="btn btn-primary">Save</button>
 
 							<button type="button" class="btn btn-danger" 
-								v-on="click: createProduct = true"
+								v-on="click: showForm.createProduct = false"
 								>
 								Cancel
 							</button>
@@ -177,8 +177,8 @@
 			</div>
 
 		  		<!-- product list -->
-		  	<div v-repeat="products | filterBy search in 'product_name' | orderBy sortProductsKey reverseProduct"
-				v-on="click: newProducts.id = id, mouseenter: currentProductIdFromHover = id, click: showAllLinks = true"
+		  	<div v-repeat="products | filterBy searchProducts in 'product_name' | orderBy sortProductsKey reverseProduct"
+				v-on="click: newProducts.id = id, mouseenter: currentlyHovering.productId = id"
 				class="productList actives" 
 				v-class="selectProductWithColor: newProducts.id == id"
 				>
@@ -194,7 +194,9 @@
 
 						<span  style="font-size: 1em; color: #ffffff; margin-right: 10px; float: right;"
 							class="glyphicon glyphicon-pencil"
-							v-on="click: editProduct = false"
+							v-on="click: showEditProductForm, 
+							mouseenter: currentlyHovering.editButton = true, 
+							mouseleave: currentlyHovering.editButton = false"
 							>
 						</span>
 
@@ -208,7 +210,7 @@
 
 
 					<!-- edit form -->
-					<div v-show="! editProduct" v-if="id == newProducts.id" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 0px solid #5eb8ad;">
+					<div v-show="showForm.editProduct" v-if="id == newProducts.id" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 0px solid #5eb8ad;">
 
 
 						<div>
@@ -221,7 +223,7 @@
 								margin-right: 0px;"
 								>
 								<br>
-								
+
 								<input type="text" class="form-control" v-model="newProducts.product_name">
 								
 								<br>
@@ -239,7 +241,7 @@
 									</button>
 
 									<button type="button" class="btn btn-danger" 
-										v-on="click: editProduct = true"
+										v-on="click: showForm.editProduct = false"
 										>
 										Cancel
 									</button>
@@ -256,17 +258,18 @@
 
 				<!-- <pre>clicked id: @{{ newProducts.id }}</pre>
 				<pre>clicked Product Name: @{{ newProducts.product_name }}</pre>
-				<pre>Hovering: @{{ currentProductIdFromHover }}</pre>
-				<pre>Product Length: @{{ productsLength }}</pre>
-				<pre>showAllLinks: @{{ showAllLinks }}</pre> 
-				<pre>Products: @{{ products }}</pre>  -->
+				<pre>Hovering: @{{ currentlyHovering.productId }}</pre>
+				<pre>editProduct State: @{{ showForm.editProduct }}</pre> 
+				<pre>createProduct State: @{{ showForm.createProduct }}</pre> 
+				<pre>showAllLinks State: @{{ showAllLinks }}</pre> 
+				<pre>currentlyHovering Edit Button @{{ currentlyHovering.editButton }}</pre> -->
 	    </div>
 
 	    <div class="middleDIVBody">
 
 	    	<!-- Header Text with edit button -->
 									
-	    	<div style="overflow-y: auto; height: 500px;">
+	    	<div style="overflow-y: auto;" v-style="height: windows.Inner.Height + 'px',">
 				<div v-repeat="links | filterBy searchLinks in filterByKey | orderBy sortLinksKey reverseLink" 
 					v-show="showAllLinks" class="linkList"
 					>
@@ -276,7 +279,7 @@
 
 					<span style=" float: right; color: #777;"   
 							class="glyphicon glyphicon-trash"
-							v-on="mouseenter: currentProductLinkIdFromHover = id, click: onDeleteLink"
+							v-on="mouseenter: currentlyHovering.linkId = id, click: onDeleteLink"
 							>
 					</span>
 
@@ -306,21 +309,21 @@
 					</form>
 
 				</div>
-				<!-- <pre>link[]: @{{ links }}</pre> -->
-
+				<!-- <pre>link[]: @{{ links }}</pre>
+				<pre>link hovering: @{{ currentlyHovering.linkId }}</pre> -->
 			</div>
 	    </div>
 
 
 
-	    <div class="rightDIVBody">
+	    <div class="rightDIVBody" v-style="height: windows.Inner.Height + 'px',">
 
-	    	 <!-- <pre>custom_id we are adding from button: @{{ linkToAdd.custom_id }}</pre> 
-	    	 <pre>title we are adding from button: @{{ linkToAdd.title }}</pre> -->
+	    	 <!-- <pre>@{{ productIdAndLinks[0].product_links[0].product_link }}</pre>  -->
+	    	 <!-- <pre>title we are adding from button: @{{ linkToAdd.title }}</pre> -->
 	    	 <!-- search response -->
 
-	    	 <div style="overflow-y: auto; height: 500px;">
-	    	 	<div v-repeat="searchResponse" class="linkList">
+	    	 <div style="overflow-y: auto;" v-style="height: windows.Inner.Height + 'px',">
+	    	 	<div v-repeat="searchResponse" class="linkList" v-show="showAllLinks">
 
 					<div class="media">
 
@@ -355,24 +358,22 @@
 
 	    </div>
 	</div>
-	
-
-
-  </div>
+	<!-- DEBUG -->
+	<!-- <pre v-repeat="p : productIdAndLinks[0]">@{{ p }}</pre> -->
+	<pre>@{{ windows.Inner.Height }}</pre>
 </div>
 
 
 
+
 <!-- scripts -->
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
 <script>
 
 	$(function () {
 	  $('[data-toggle="tooltip"]').tooltip()
-	})
-
+	});
+	
 </script>
 
 <script src="/js/vendor/vue.min.js"></script>
