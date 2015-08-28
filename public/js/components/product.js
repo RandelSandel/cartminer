@@ -143,7 +143,7 @@ new Vue ({
       				this.newProducts.product_name = this.products[x].product_name;
       				this.newProducts.product_description = this.products[x].product_description;
       				this.newProducts.primary_product_link_id = this.products[x].primary_product_link_id;
-
+      				
       			}
       			else{}
 

@@ -31,5 +31,27 @@ class ApiCartController extends Controller
     
 	}
 
+	public function editCart(Request $request, $id) {
+
+    	$cart = \App\Cart::find($id);
+		
+		Debugbar::info($cart);
+
+		// we use Request to get the products info sent through from the view
+		Debugbar::info($request->get('cart_name'));
+		$inputCartDescription = $request->get('cart_description');
+		$inputCartName = $request->get('cart_name');
+
+		$cart->cart_description = $inputCartDescription;
+		$cart->cart_name = $inputCartName;
+
+		if($cart->save()) {
+			return \Response::json(array('success' => true), 200);
+		}
+			
+		return;
+		
+    }
+
 
 }

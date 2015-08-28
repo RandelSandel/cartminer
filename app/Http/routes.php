@@ -24,7 +24,7 @@ Route::post('api/createCart', 'ApiCartController@createCart');
 
 Route::get('api/deleteCart/{id}', 'ApiCartController@deleteCart');
 
-
+Route::post('api/editCart/{id}', 'ApiCartController@editCart');
 
 
 // product stuff

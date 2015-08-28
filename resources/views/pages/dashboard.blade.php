@@ -128,8 +128,9 @@
 				</div>
 
 				<!-- cart list -->
-				<i v-repeat="carts | filterBy search | orderBy sortKey reverse" 
-					class="list-group-item" v-on="mouseover: currentlyHovering.cartId = id" 
+				<div v-repeat="carts | filterBy search | orderBy sortKey reverse" 
+					class="list-group-item" v-on="mouseover: currentlyHovering.cartId = id, 
+					click: newCart.id = id" 
 					>
 					
 					<span style="float: right; color: blue;"   
@@ -138,21 +139,63 @@
 						>
 					</span>
 
+					<span  style="font-size: 1em; color: blue; margin-right: 10px; float: right;"
+						class="glyphicon glyphicon-pencil"
+						v-on="click: showForm.editCart = true, click: newCart.cart_name = cart_name,
+						newCart.cart_description = cart_description"
+						>
+					</span>
+
 					<a href="product/@{{ id }}"> cart name: @{{ cart_name }} </a>
 					<p> cart description: @{{ cart_description }} </p>
 					<p> id: @{{ id }} </p>
 
-					
 
-					<!-- <span  style="font-size: 1em; color: #ffffff; margin-right: 10px; float: right;"
-						class="glyphicon glyphicon-pencil"
-						v-on="click: showEditProductForm, 
-						mouseenter: currentlyHovering.editButton = true, 
-						mouseleave: currentlyHovering.editButton = false"
-						>
-					</span> -->
-					
-				</i>
+
+					<!-- edit form -->
+					<div v-show="showForm.editCart" v-if="id == newCart.id" style="padding: 10px 0px 30px 5%; margin-bottom: 20px; border: 0px solid #5eb8ad;">
+
+
+						<div>
+							<h4>Edit product info</h4>
+						</div>
+
+						<form method="POST" v-on="submit: onEditCart">
+							<div class="form-group" style="
+								padding-right: 30px;
+								margin-right: 0px;"
+								>
+								<br>
+
+								<input type="text" class="form-control" v-model="newCart.cart_name">
+								
+								<br>
+								
+								<textarea type="text" class="form-control" rows="3" v-model="newCart.cart_description">
+															
+								</textarea>
+
+								
+								<br>
+								<div style="float: right">
+
+									<button type="submit" class="btn btn-primary">
+										Save
+									</button>
+
+									<button type="button" class="btn btn-danger" 
+										v-on="click: showForm.editCart = false"
+										>
+										Cancel
+									</button>
+
+								</div>
+							</div>
+						</form>
+
+					</div>
+	
+				</div>
 			</ul>
 			
 		</div>

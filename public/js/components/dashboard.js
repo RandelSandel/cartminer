@@ -18,10 +18,12 @@ new Vue({
 		user_id: '',
 
 		showForm: {
-			createCart: false
+			createCart: false,
+			editCart: false
 		},
 
 		newCart: {
+			id: '',
 			user_id: '',
 			cart_name: '',
 			cart_description: ''
@@ -116,6 +118,50 @@ new Vue({
       			else{}
       		}
 
+		},
+
+		onEditCart: function(e) {
+			e.preventDefault();
+
+			// set editProduct to true so the form dissapears from the DOM
+			this.showForm.editCart = false;
+			
+			var val = this.newCart.id;
+			//console.log(val);
+			var carts = this.newCart;
+			//console.log(carts);
+			
+			// make something true to verify submission
+			this.$http.post('/api/editCart/' + val, carts, function(response) {
+
+			 	var success = response.success;
+
+				if (success) {
+					console.log("the update was successfull");
+
+					// where the newly edited id is equal to the product id update the product array
+					for (var i = 0; i < this.carts.length; i++) {
+
+						if (this.newCart.id == this.carts[i].id) {
+
+							// delete the original entry
+							this.carts.splice(i, 1);
+							
+							// push the updated entry to the product array
+							this.carts.push(this.newCart);
+
+							// we set id = 0 so the create product form doesn't appear after submitting
+							this.newCart = { id: '0', cart_name: '', cart_description: ''};
+
+						}
+						else{}
+					}
+
+				}
+				else {
+					console.log("whoops something went wrong, your data might not have been saved");
+				}
+			}.bind(this));
 		}
 	}
 
